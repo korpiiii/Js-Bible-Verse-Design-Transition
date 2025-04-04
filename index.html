@@ -3,254 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bucket List</title>
+    <title>Bible Verse</title>
     <style>
         :root {
-            --black: #000000;  
+            --black: #1a1a1a;
             --white: #ffffff;
-            --gray-light: #f5f6fa;
-            --gray-mid: #dfe6e9;
-            --gray-dark: #636e72;
-            --radius: 8px;     
-            --banner-radius: 0; 
+            --gray-light: #f8f8f8;
+            --gold: #b59a61;
+            --radius: 0;
         }
 
         body {
+            font-family: 'Lora', 'Times New Roman', serif;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--white);
             color: var(--black);
-            line-height: 1.6;
-            font-weight: 400;
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .banner {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 4rem 1rem;
+        .verse-container {
+            max-width: 600px;
+            margin: 2rem;
+            padding: 3rem;
             text-align: center;
-            border-bottom-left-radius: var(--banner-radius);
-            border-bottom-right-radius: var(--banner-radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: -2rem auto 0;
-            padding: 0 2rem;
+            transition: all 0.4s ease;
         }
 
         h1 {
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            color: var(--gray-mid);
-            font-size: 1.1rem;
-        }
-
-        .bucket-list {
-            background: var(--white);
-            border: 1px solid var(--gray-mid);
-            border-radius: var(--radius);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-            padding: 2.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .bucket-list h2 {
-            font-weight: 500;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
+            font-weight: 400;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
             color: var(--black);
+            text-transform: uppercase;
         }
 
-        .bucket-list ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .verse {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            quotes: "“" "”";
         }
 
-        .bucket-list li {
-            padding: 1.2rem 0;
-            border-bottom: 1px solid var(--gray-mid);
-            display: flex;
-            align-items: center;
-            transition: all 0.2s;
+        .verse::before {
+            content: open-quote;
         }
 
-        .bucket-list li:last-child {
-            border-bottom: none;
+        .verse::after {
+            content: close-quote;
         }
 
-        .bucket-list li:hover {
-            background: var(--gray-light);
-            padding-left: 1rem;
-        }
-
-        .bucket-list li::before {
-            content: "•";
-            margin-right: 1rem;
+        .reference {
+            font-style: normal;
+            font-size: 1rem;
             color: var(--black);
-            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
-        .controls {
+        .buttons {
+            margin-top: 2.5rem;
             display: flex;
+            justify-content: center;
             gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
         }
 
         button {
             padding: 0.8rem 1.8rem;
-            background: var(--black);
-            color: var(--white);
-            border: none;
+            background: transparent;
+            border: 1px solid var(--black);
             border-radius: var(--radius);
             cursor: pointer;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.2s;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        #addDesign {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        #removeDesign {
+            color: var(--black);
         }
 
         button:hover {
-            background: var(--gray-dark);
-            transform: translateY(-1px);
+            opacity: 0.9;
         }
 
-        input {
-            flex-grow: 1;
-            padding: 0.8rem 1.2rem;
-            border: 1px solid var(--gray-mid);
-            border-radius: var(--radius);
-            font-family: inherit;
-            font-size: 1rem;
-            background: var(--white);
+        
+        .design-active {
+            background: url('https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200') center/cover;
+            padding: 4rem;
+            position: relative;
+            color: white;
+            border: none;
+        }
+
+        .design-active::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .design-active h1,
+        .design-active .verse,
+        .design-active .reference,
+        .design-active .buttons {
+            position: relative;
+            z-index: 1;
+        }
+
+        .design-active h1 {
+            color: var(--gold);
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+        }
+
+        .design-active .verse {
+            font-size: 1.8rem;
+            line-height: 2.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .design-active .reference {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .design-active #removeDesign {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: var(--gold);
+        }
+
+        .design-active #addDesign {
+            background: var(--gold);
             color: var(--black);
-            min-width: 200px;
-            transition: all 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--black);
-            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
-        }
-
-        .add-item {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 600px) {
-            .banner {
-                padding: 3rem 1rem;
-            }
-            
-            .add-item, .controls {
-                flex-direction: column;
-            }
-            
-            input, button {
-                width: 100%;
-            }
+            border: 1px solid var(--gold);
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="banner">
-        <div class="container">
-            <h1>Harvy's Bucket List</h1>
-            <p class="subtitle">Personal Bucket List</p>
-        </div>
-    </div>
-    
-    <div class="container">
-        <div class="bucket-list">
-            <h2>List</h2>
-            <ul id="bucketListItems">
-                <li>Have a good physique</li>
-                <li>Have 8 hours of sleep for the rest of my life</li>
-                <li>Financial Freedom</li>
-                <li>Learn how to create music</li>
-            </ul>
-            
-            <div class="add-item">
-                <input type="text" id="newItemInput" placeholder="New objective...">
-                <button id="addItemBtn">Add</button>
-            </div>
-            
-            <div class="controls">
-                <button id="changeFontBtn">Toggle Font</button>
-                <button id="toggleBoldBtn">Bold/Regular</button>
-            </div>
+    <div class="verse-container" id="verseContainer">
+        <h1>Deuteronomy 31:6</h1>
+        <p class="verse">Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.</p>
+        <p class="reference">Deuteronomy 31:6 </p>
+        
+        <div class="buttons">
+            <button id="addDesign">Add Design</button>
+            <button id="removeDesign">Remove Design</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const bucketList = document.getElementById('bucketListItems');
-            const addItemBtn = document.getElementById('addItemBtn');
-            const newItemInput = document.getElementById('newItemInput');
-            const changeFontBtn = document.getElementById('changeFontBtn');
-            const toggleBoldBtn = document.getElementById('toggleBoldBtn');
+            const verseContainer = document.getElementById('verseContainer');
+            const addDesignBtn = document.getElementById('addDesign');
+            const removeDesignBtn = document.getElementById('removeDesign');
             
-            
-            const fontFamilies = [
-                "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-                "'SF Pro Display', -apple-system, sans-serif",
-                "'Helvetica Now', Helvetica, sans-serif",
-                "'Georgia', serif",
-                "'Consolas', 'Monaco', monospace",
-                "'IBM Plex Mono', monospace"
-            ];
-            let currentFontIndex = 0;
-            let isBold = false;
-            
-            
-            const addItem = () => {
-                const text = newItemInput.value.trim();
-                if (text) {
-                    const li = document.createElement('li');
-                    li.textContent = text;
-                    if (isBold) li.style.fontWeight = '600';
-                    
-                    li.style.opacity = '0';
-                    li.style.transform = 'translateY(10px)';
-                    bucketList.appendChild(li);
-                    
-                    setTimeout(() => {
-                        li.style.opacity = '1';
-                        li.style.transform = 'translateY(0)';
-                    }, 10);
-                    
-                    newItemInput.value = '';
-                }
-            };
-            
-            addItemBtn.addEventListener('click', addItem);
-            newItemInput.addEventListener('keypress', (e) => e.key === 'Enter' && addItem());
-            
-            // Font toggle
-            changeFontBtn.addEventListener('click', () => {
-                currentFontIndex = (currentFontIndex + 1) % fontFamilies.length;
-                document.body.style.fontFamily = fontFamilies[currentFontIndex];
+            addDesignBtn.addEventListener('click', function() {
+                verseContainer.classList.add('design-active');
             });
             
-            // Bold toggle
-            toggleBoldBtn.addEventListener('click', () => {
-                isBold = !isBold;
-                const items = bucketList.querySelectorAll('li');
-                items.forEach(item => {
-                    item.style.fontWeight = isBold ? '600' : '400';
-                });
+            removeDesignBtn.addEventListener('click', function() {
+                verseContainer.classList.remove('design-active');
             });
         });
     </script>
