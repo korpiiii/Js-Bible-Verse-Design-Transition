@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucket List</title>
+    <style>
+        :root {
+            --black: #000000;  
+            --white: #ffffff;
+            --gray-light: #f5f6fa;
+            --gray-mid: #dfe6e9;
+            --gray-dark: #636e72;
+            --radius: 8px;     
+            --banner-radius: 0; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .banner {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 4rem 1rem;
+            text-align: center;
+            border-bottom-left-radius: var(--banner-radius);
+            border-bottom-right-radius: var(--banner-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: -2rem auto 0;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray-mid);
+            font-size: 1.1rem;
+        }
+
+        .bucket-list {
+            background: var(--white);
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .bucket-list h2 {
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            color: var(--black);
+        }
+
+        .bucket-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bucket-list li {
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--gray-mid);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .bucket-list li:last-child {
+            border-bottom: none;
+        }
+
+        .bucket-list li:hover {
+            background: var(--gray-light);
+            padding-left: 1rem;
+        }
+
+        .bucket-list li::before {
+            content: "•";
+            margin-right: 1rem;
+            color: var(--black);
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.8rem 1.8rem;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--gray-dark);
+            transform: translateY(-1px);
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--gray-mid);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--black);
+            min-width: 200px;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--black);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+        }
+
+        .add-item {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .banner {
+                padding: 3rem 1rem;
+            }
+            
+            .add-item, .controls {
+                flex-direction: column;
+            }
+            
+            input, button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="container">
+            <h1>Harvy's Bucket List</h1>
+            <p class="subtitle">Personal Bucket List</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="bucket-list">
+            <h2>List</h2>
+            <ul id="bucketListItems">
+                <li>Have a good physique</li>
+                <li>Have 8 hours of sleep for the rest of my life</li>
+                <li>Financial Freedom</li>
+                <li>Learn how to create music</li>
+            </ul>
+            
+            <div class="add-item">
+                <input type="text" id="newItemInput" placeholder="New objective...">
+                <button id="addItemBtn">Add</button>
+            </div>
+            
+            <div class="controls">
+                <button id="changeFontBtn">Toggle Font</button>
+                <button id="toggleBoldBtn">Bold/Regular</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bucketList = document.getElementById('bucketListItems');
+            const addItemBtn = document.getElementById('addItemBtn');
+            const newItemInput = document.getElementById('newItemInput');
+            const changeFontBtn = document.getElementById('changeFontBtn');
+            const toggleBoldBtn = document.getElementById('toggleBoldBtn');
+            
+            
+            const fontFamilies = [
+                "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+                "'SF Pro Display', -apple-system, sans-serif",
+                "'Helvetica Now', Helvetica, sans-serif",
+                "'Georgia', serif",
+                "'Consolas', 'Monaco', monospace",
+                "'IBM Plex Mono', monospace"
+            ];
+            let currentFontIndex = 0;
+            let isBold = false;
+            
+            
+            const addItem = () => {
+                const text = newItemInput.value.trim();
+                if (text) {
+                    const li = document.createElement('li');
+                    li.textContent = text;
+                    if (isBold) li.style.fontWeight = '600';
+                    
+                    li.style.opacity = '0';
+                    li.style.transform = 'translateY(10px)';
+                    bucketList.appendChild(li);
+                    
+                    setTimeout(() => {
+                        li.style.opacity = '1';
+                        li.style.transform = 'translateY(0)';
+                    }, 10);
+                    
+                    newItemInput.value = '';
+                }
+            };
+            
+            addItemBtn.addEventListener('click', addItem);
+            newItemInput.addEventListener('keypress', (e) => e.key === 'Enter' && addItem());
+            
+            // Font toggle
+            changeFontBtn.addEventListener('click', () => {
+                currentFontIndex = (currentFontIndex + 1) % fontFamilies.length;
+                document.body.style.fontFamily = fontFamilies[currentFontIndex];
+            });
+            
+            // Bold toggle
+            toggleBoldBtn.addEventListener('click', () => {
+                isBold = !isBold;
+                const items = bucketList.querySelectorAll('li');
+                items.forEach(item => {
+                    item.style.fontWeight = isBold ? '600' : '400';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
